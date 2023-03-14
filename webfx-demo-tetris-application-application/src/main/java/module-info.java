@@ -6,11 +6,13 @@ module webfx.demo.tetris.application.application {
     requires java.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires javafx.media;
+    requires webfx.extras.scalepane;
+    requires webfx.kit.util.scene;
     requires webfx.platform.audio;
     requires webfx.platform.resource;
     requires webfx.platform.shutdown;
     requires webfx.platform.storage;
+    requires webfx.platform.useragent;
 
     // Exported packages
     exports eu.hansolo.fx.tetris;

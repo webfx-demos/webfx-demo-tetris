@@ -6,7 +6,9 @@
     </exported-packages>
 
     <dependencies>
-        <used-by-source-modules/>
+        <used-by-source-modules>
+            <undetected-module scope="runtime">javafx-media</undetected-module> <!-- because otherwise just scope="provided" from webfx-kit-platform-audio-openjfx-gwt -->
+        </used-by-source-modules>
     </dependencies>
 
 </project>
