@@ -32,10 +32,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>webfx-demo-tetris-application-application</module>
-        <module>webfx-demo-tetris-application-application-gluon</module>
-        <module>webfx-demo-tetris-application-application-gwt</module>
-        <module>webfx-demo-tetris-application-application-openjfx</module>
+        <module>webfx-demo-tetris-application</module>
+        <module>webfx-demo-tetris-application-gluon</module>
+        <module>webfx-demo-tetris-application-gwt</module>
+        <module>webfx-demo-tetris-application-openjfx</module>
     </modules>
 
 </project>
