@@ -366,11 +366,11 @@ public class Main extends Application {
         scene.setOnKeyPressed(e -> {
             if (running && null != activeBlock) {
                 switch (e.getCode()) {
-                    case LEFT  -> activeBlock.moveLeft();
-                    case RIGHT -> activeBlock.moveRight();
-                    case SPACE -> activeBlock.rotate();
-                    case DOWN  -> activeBlock.drop();
-                    case M     -> {
+                    case LEFT  : activeBlock.moveLeft(); break;
+                    case RIGHT : activeBlock.moveRight(); break;
+                    case SPACE : activeBlock.rotate(); break;
+                    case DOWN  : activeBlock.drop(); break;
+                    case M     : {
                         if (GameMode.STANDARD == gameMode) {
                             setGameMode(GameMode.GITHUB);
                         } else if (GameMode.GITHUB == gameMode) {
@@ -378,6 +378,7 @@ public class Main extends Application {
                         } else {
                             setGameMode(GameMode.STANDARD);
                         }
+                        break;
                     }
                 }
             } else {
@@ -385,9 +386,10 @@ public class Main extends Application {
                     startScreen(false);
                 } else {
                     switch (e.getCode()) {
-                        case SPACE -> {
+                        case SPACE: {
                             level = 1;
                             startLevel();
+                            break;
                         }
                     }
                 }
@@ -465,7 +467,7 @@ public class Main extends Application {
         this.gameMode = mode;
         this.imageMap.clear();
         switch(this.gameMode) {
-            case STANDARD -> {
+            case STANDARD : {
                 imageMap.put(BlockType.CYAN, cyanBlockImg);
                 imageMap.put(BlockType.BLUE, blueBlockImg);
                 imageMap.put(BlockType.ORANGE, orangeBlockImg);
@@ -473,8 +475,9 @@ public class Main extends Application {
                 imageMap.put(BlockType.GREEN, greenBlockImg);
                 imageMap.put(BlockType.PURPLE, purpleBlockImg);
                 imageMap.put(BlockType.RED, redBlockImg);
+                break;
             }
-            case GLOSSY   -> {
+            case GLOSSY   : {
                 imageMap.put(BlockType.CYAN, cyanGlossyBlockImg);
                 imageMap.put(BlockType.BLUE, blueGlossyBlockImg);
                 imageMap.put(BlockType.ORANGE, orangeGlossyBlockImg);
@@ -482,8 +485,9 @@ public class Main extends Application {
                 imageMap.put(BlockType.GREEN, greenGlossyBlockImg);
                 imageMap.put(BlockType.PURPLE, purpleGlossyBlockImg);
                 imageMap.put(BlockType.RED, redGlossyBlockImg);
+                break;
             }
-            case GITHUB   -> {
+            case GITHUB   : {
                 imageMap.put(BlockType.CYAN, githubDarkGreenBlockImg);
                 imageMap.put(BlockType.BLUE, githubDarkGreenBlockImg);
                 imageMap.put(BlockType.ORANGE, githubDarkGreenBlockImg);
@@ -491,8 +495,9 @@ public class Main extends Application {
                 imageMap.put(BlockType.GREEN, githubGreenBlockImg);
                 imageMap.put(BlockType.PURPLE, githubLightGreenBlockImg);
                 imageMap.put(BlockType.RED, githubVeryLightGreenBlockImg);
+                break;
             }
-            default       -> {
+            default       : {
                 imageMap.put(BlockType.CYAN, cyanBlockImg);
                 imageMap.put(BlockType.BLUE, blueBlockImg);
                 imageMap.put(BlockType.ORANGE, orangeBlockImg);
@@ -500,6 +505,7 @@ public class Main extends Application {
                 imageMap.put(BlockType.GREEN, greenBlockImg);
                 imageMap.put(BlockType.PURPLE, purpleBlockImg);
                 imageMap.put(BlockType.RED, redBlockImg);
+                break;
             }
         }
         drawPreview();
@@ -582,11 +588,11 @@ public class Main extends Application {
     // Get angle related block matrix for given block
     private Integer[][] getBlockMatrix(final Block block) {
         switch (block.angle) {
-            case 0   -> { return block.blockType.matrix_0; }
-            case 90  -> { return block.blockType.matrix_90; }
-            case 180 -> { return block.blockType.matrix_180; }
-            case 270 -> { return block.blockType.matrix_270; }
-            default  -> { return new Integer[0][0]; }
+            case 0   : { return block.blockType.matrix_0; }
+            case 90  : { return block.blockType.matrix_90; }
+            case 180 : { return block.blockType.matrix_180; }
+            case 270 : { return block.blockType.matrix_270; }
+            default  : { return new Integer[0][0]; }
         }
     }
 
@@ -705,28 +711,31 @@ public class Main extends Application {
     private void drawBackground() {
         bkgCtx.clearRect(0, 0, WIDTH, HEIGHT);
         switch(gameMode) {
-            case STANDARD -> {
+            case STANDARD : {
                 bkgCtx.setFill(gameMode.backgroundColor);
                 bkgCtx.fillRect(0, 0, WIDTH, HEIGHT);
                 bkgCtx.setStroke(Color.GRAY);
                 bkgCtx.setLineWidth(10);
                 bkgCtx.strokeRoundRect(10, 10, WIDTH - 20, HEIGHT - 20, 10, 10);
+                break;
             }
-            case GLOSSY   -> {
+            case GLOSSY   : {
                 bkgCtx.setFill(gameMode.backgroundColor);
                 bkgCtx.fillRect(0, 0, WIDTH, HEIGHT);
                 bkgCtx.setStroke(Color.GRAY);
                 bkgCtx.setLineWidth(10);
                 bkgCtx.strokeRoundRect(10, 10, WIDTH - 20, HEIGHT - 20, 10, 10);
+                break;
             }
-            case GITHUB   -> {
+            case GITHUB   : {
                 bkgCtx.setFill(gameMode.backgroundColor);
                 bkgCtx.fillRect(0, 0, WIDTH, HEIGHT);
                 bkgCtx.setStroke(Color.rgb(48, 54, 60));
                 bkgCtx.setLineWidth(2);
                 bkgCtx.strokeRoundRect(10, 10, WIDTH - 20, HEIGHT - 20, 10, 10);
+                break;
             }
-            default       -> {
+            default       : {
 
             }
         }
@@ -742,18 +751,18 @@ public class Main extends Application {
         for (int y = 0 ; y < MATRIX_HEIGHT ;y++) {
             for (int x = 0; x < MATRIX_WIDTH; x++) {
                 switch(gameMode) {
-                    case STANDARD -> ctx.fillRect(x * CELL_WIDTH + 1, y * CELL_HEIGHT + 1, 22, 22);
-                    case GLOSSY   -> ctx.fillRect(x * CELL_WIDTH + 1, y * CELL_HEIGHT + 1, 22, 22);
-                    case GITHUB   -> ctx.fillRoundRect(x * CELL_WIDTH + 2, y * CELL_HEIGHT + 2, 20, 20, 5, 5);
+                    case STANDARD : ctx.fillRect(x * CELL_WIDTH + 1, y * CELL_HEIGHT + 1, 22, 22);  break;
+                    case GLOSSY   : ctx.fillRect(x * CELL_WIDTH + 1, y * CELL_HEIGHT + 1, 22, 22);  break;
+                    case GITHUB   : ctx.fillRoundRect(x * CELL_WIDTH + 2, y * CELL_HEIGHT + 2, 20, 20, 5, 5);  break;
                 }
                 switch(MATRIX[y][x]) {
-                    case 1 -> ctx.drawImage(imageMap.get(BlockType.BLUE), x * CELL_WIDTH, y * CELL_HEIGHT);
-                    case 2 -> ctx.drawImage(imageMap.get(BlockType.CYAN), x * CELL_WIDTH, y * CELL_HEIGHT);
-                    case 3 -> ctx.drawImage(imageMap.get(BlockType.GREEN), x * CELL_WIDTH, y * CELL_HEIGHT);
-                    case 4 -> ctx.drawImage(imageMap.get(BlockType.YELLOW), x * CELL_WIDTH, y * CELL_HEIGHT);
-                    case 5 -> ctx.drawImage(imageMap.get(BlockType.ORANGE), x * CELL_WIDTH, y * CELL_HEIGHT);
-                    case 6 -> ctx.drawImage(imageMap.get(BlockType.PURPLE), x * CELL_WIDTH, y * CELL_HEIGHT);
-                    case 7 -> ctx.drawImage(imageMap.get(BlockType.RED), x * CELL_WIDTH, y * CELL_HEIGHT);
+                    case 1 : ctx.drawImage(imageMap.get(BlockType.BLUE), x * CELL_WIDTH, y * CELL_HEIGHT); break;
+                    case 2 : ctx.drawImage(imageMap.get(BlockType.CYAN), x * CELL_WIDTH, y * CELL_HEIGHT); break;
+                    case 3 : ctx.drawImage(imageMap.get(BlockType.GREEN), x * CELL_WIDTH, y * CELL_HEIGHT); break;
+                    case 4 : ctx.drawImage(imageMap.get(BlockType.YELLOW), x * CELL_WIDTH, y * CELL_HEIGHT); break;
+                    case 5 : ctx.drawImage(imageMap.get(BlockType.ORANGE), x * CELL_WIDTH, y * CELL_HEIGHT); break;
+                    case 6 : ctx.drawImage(imageMap.get(BlockType.PURPLE), x * CELL_WIDTH, y * CELL_HEIGHT); break;
+                    case 7 : ctx.drawImage(imageMap.get(BlockType.RED), x * CELL_WIDTH, y * CELL_HEIGHT); break;
                 }
             }
         }
