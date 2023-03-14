@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static dev.webfx.platform.shutdown.Shutdown.*;
+
 
 public class Main extends Application {
     protected enum GameMode {
@@ -403,8 +405,9 @@ public class Main extends Application {
     }
 
     @Override public void stop() {
-        Platform.exit();
-        System.exit(0);
+        softwareShutdown(true, 0);
+        //Platform.exit();
+        //System.exit(0);
     }
 
 

@@ -1,15 +1,12 @@
 package eu.hansolo.fx.tetris;
 
-import javafx.scene.paint.Color;
-
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class Constants {
-    public static final String HOME_FOLDER          = new StringBuilder(System.getProperty("user.home")).append(File.separator).toString();
-    public static final String PROPERTIES_FILE_NAME = "tetris.properties";
+    //public static final String HOME_FOLDER          = new StringBuilder(System.getProperty("user.home")).append(File.separator).toString();
+    //public static final String PROPERTIES_FILE_NAME = "tetris.properties";
     public static final String HIGHSCORE_KEY        = "highscore";
 
     public static final Map<Integer, Long> LEVEL_SPEED_MAP = new HashMap<>() {{
