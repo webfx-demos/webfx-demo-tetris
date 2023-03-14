@@ -32,7 +32,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        app: [{name: 'Tetris', module-token: 'webfx-demo-tetris', gwt-token: 'webfx_demo_tetris', gluon-token: 'WebFXDemotetris', web-push-branch: 'tetris', android-package-name: 'dev.webfx.demo.tetris', android-track: 'beta', ios-bundle-id: 'dev.webfx.demo.tetris', version: '0.1.0-SNAPSHOT'}]
+        app: [{name: 'Tetris', module-token: 'webfx-demo-tetris', gwt-token: 'webfx_demo_tetris', gluon-token: 'WebFXDemoTetris', web-push-branch: 'tetris', android-package-name: 'dev.webfx.demo.tetris', android-track: 'beta', ios-bundle-id: 'dev.webfx.demo.tetris', version: '0.1.0-SNAPSHOT'}]
         os-config:  [1, 2, 3, 4]
         include:
           - os-config: 1 # Generates builds 1) 2) 3) 4) & 5)
