@@ -348,6 +348,8 @@ public class Main extends Application {
 
         final VBox dataPane = new VBox(50, highScoreBox, scoreBox, levelBox, previewPane);
         final HBox gameBox  = new HBox(10, gamePane, dataPane);
+        gameBox.setAlignment(Pos.CENTER);
+        gameBox.setFillHeight(false);
 
         dataPane.setPrefWidth(200);
         dataPane.setAlignment(Pos.TOP_CENTER);
