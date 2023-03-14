@@ -1,5 +1,6 @@
 package eu.hansolo.fx.tetris;
 
+import dev.webfx.platform.resource.Resource;
 import javafx.scene.text.Font;
 
 
@@ -12,7 +13,7 @@ public class Fonts {
 
     static {
         try {
-            silkwormName  = Font.loadFont(Fonts.class.getResourceAsStream("/eu/hansolo/fx/tetris/Silkworm.ttf"), 10).getName();
+            silkwormName  = Font.loadFont(Resource.toUrl("Silkworm.ttf", Fonts.class), 10).getFamily();
         } catch (Exception exception) {
             exception.printStackTrace();
         }

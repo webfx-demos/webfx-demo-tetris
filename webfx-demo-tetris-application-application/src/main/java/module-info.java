@@ -9,6 +9,7 @@ module webfx.demo.tetris.application.application {
     requires javafx.media;
     requires webfx.platform.audio;
     requires webfx.platform.resource;
+    requires webfx.platform.shutdown;
     requires webfx.platform.storage;
 
     // Exported packages
