@@ -1,11 +1,13 @@
 package eu.hansolo.fx.tetris;
 
+import dev.webfx.extras.scalepane.ScalePane;
+import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import dev.webfx.platform.audio.Audio;
 import dev.webfx.platform.audio.AudioService;
 import dev.webfx.platform.resource.Resource;
+import dev.webfx.platform.useragent.UserAgent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,19 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -35,10 +25,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static dev.webfx.platform.shutdown.Shutdown.*;
+import static dev.webfx.platform.shutdown.Shutdown.softwareShutdown;
 
 
 public class Main extends Application {
+
+    private final static boolean IS_BROWSER = UserAgent.isBrowser();
+
     protected enum GameMode {
         STANDARD(Color.rgb(0, 0, 0), Color.rgb(18, 18,18)),
         GLOSSY(Color.rgb(0, 0, 0), Color.rgb(18, 18,18)),
@@ -328,22 +321,22 @@ public class Main extends Application {
         final StackPane gamePane = new StackPane(bkgCanvas, canvas);
 
         final VBox highScoreBox = new VBox(10, highScoreLabel, highScoreValueLabel);
-        highScoreBox.setPadding(new Insets(5));
+        highScoreBox.setPadding(new Insets(5 + (IS_BROWSER ? 5 : 0)));
         highScoreBox.setAlignment(Pos.CENTER);
         highScoreBox.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5))));
 
         final VBox scoreBox = new VBox(10, scoreLabel, scoreValueLabel);
-        scoreBox.setPadding(new Insets(5));
+        scoreBox.setPadding(new Insets(5+ (IS_BROWSER ? 5 : 0)));
         scoreBox.setAlignment(Pos.CENTER);
         scoreBox.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5))));
 
         final VBox levelBox = new VBox(10, levelLabel, levelValueLabel);
-        levelBox.setPadding(new Insets(5));
+        levelBox.setPadding(new Insets(5+ (IS_BROWSER ? 5 : 0)));
         levelBox.setAlignment(Pos.CENTER);
         levelBox.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5))));
 
         StackPane previewPane = new StackPane(previewCanvas);
-        previewPane.setPadding(new Insets(5));
+        previewPane.setPadding(new Insets(5+ (IS_BROWSER ? 5 : 0)));
         previewPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5))));
 
         final VBox dataPane = new VBox(50, highScoreBox, scoreBox, levelBox, previewPane);
@@ -360,7 +353,10 @@ public class Main extends Application {
 
         StackPane pane = new StackPane(gameBox, startScreenView);
 
-        final Scene scene = new Scene(pane, 500, 530);
+        final Scene scene = DeviceSceneUtil.newScene(new Pane(), 500, 530, Color.BLACK);
+        pane.setMaxSize(500, 530); // Necessary to scale up with ScalePane
+
+        DeviceSceneUtil.onFontsAndImagesLoaded(() -> scene.setRoot(new ScalePane(pane)), startScreenImg);
 
         stage.setTitle("Tetris");
         stage.setScene(scene);
@@ -374,7 +370,7 @@ public class Main extends Application {
                     case RIGHT : activeBlock.moveRight(); break;
                     case SPACE : activeBlock.rotate(); break;
                     case DOWN  : activeBlock.drop(); break;
-                    case M     : {
+                    default    : if ("M".equalsIgnoreCase(e.getText())) {
                         if (GameMode.STANDARD == gameMode) {
                             setGameMode(GameMode.GITHUB);
                         } else if (GameMode.GITHUB == gameMode) {
@@ -403,7 +399,8 @@ public class Main extends Application {
         startScreen(true);
 
         //timer.start();
-        soundTrack.play(); //mediaPlayer.play();
+        if (!IS_BROWSER)
+            soundTrack.play(); //mediaPlayer.play();
     }
 
     @Override public void stop() {
@@ -695,8 +692,8 @@ public class Main extends Application {
             for (int x = 0 ; x < MATRIX_WIDTH ; x++) {
                 MATRIX[y][x] = MATRIX[y - 1][x];
             }
-            playSound(blockFallingSnd);
         }
+        playSound(blockFallingSnd);
     }
 
 
