@@ -1,25 +1,22 @@
 package eu.hansolo.fx.tetris;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Properties;
+import dev.webfx.platform.storage.LocalStorage;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public enum PropertyManager {
     INSTANCE;
 
-    private Properties properties;
+    private Map<String, String> properties;
 
 
     // ******************** Constructors **************************************
     PropertyManager() {
-        properties = new Properties();
+        properties = new HashMap<>();
         // Load properties
+/*
         final String jdkMonPropertiesFilePath = new StringBuilder(Constants.HOME_FOLDER).append(Constants.PROPERTIES_FILE_NAME).toString();
 
         // Create properties file if not exists
@@ -32,6 +29,8 @@ public enum PropertyManager {
         } catch (IOException ex) {
             System.out.println("Error reading properties file. " + ex);
         }
+*/
+        LocalStorage.getKeys().forEachRemaining(key -> properties.put(key, LocalStorage.getItem(key)));
 
         // If properties empty, fill with default values
         if (properties.isEmpty()) {
@@ -41,14 +40,15 @@ public enum PropertyManager {
 
 
     // ******************** Methods *******************************************
-    public Properties getProperties() { return properties; }
+    public Map<String, String> getProperties() { return properties; }
 
     public Object get(final String KEY) { return properties.getOrDefault(KEY, ""); }
     public void set(final String KEY, final String VALUE) {
-        properties.setProperty(KEY, VALUE);
+        properties.put(KEY, VALUE);
         storeProperties();
     }
 
+/*
     public String getString(final String key) { return properties.getOrDefault(key, "").toString(); }
     public void setString(final String key, final String value) { properties.setProperty(key, value); }
 
@@ -63,19 +63,22 @@ public enum PropertyManager {
     public int getInt(final String key) { return getInt(key, 0); }
     public int getInt(final String key, final int defaultValue) { return Integer.parseInt(properties.getOrDefault(key, Integer.toString(defaultValue)).toString()); }
     public void setInt(final String key, final int value) { properties.setProperty(key, Integer.toString(value)); }
-
+*/
     public long getLong(final String key) { return getLong(key, 0); }
     public long getLong(final String key, final long defaultValue) { return Long.parseLong(properties.getOrDefault(key, Long.toString(defaultValue)).toString()); }
-    public void setLong(final String key, final long value) { properties.setProperty(key, Long.toString(value)); }
-
+    public void setLong(final String key, final long value) { properties.put(key, Long.toString(value)); }
+/*
     public boolean getBoolean(final String key) { return getBoolean(key, false); }
     public boolean getBoolean(final String key, final boolean defaultValue) { return Boolean.parseBoolean(properties.getOrDefault(key, Boolean.toString(defaultValue)).toString()); }
     public void setBoolean(final String key, final boolean value) { properties.setProperty(key, Boolean.toString(value)); }
 
     public boolean hasKey(final String key) { return properties.containsKey(key); }
+*/
 
 
     public void storeProperties() {
+        properties.forEach(LocalStorage::setItem);
+/*
         if (null == properties) { return; }
         final String propFilePath = new StringBuilder(Constants.HOME_FOLDER).append(Constants.PROPERTIES_FILE_NAME).toString();
         try (OutputStream output = new FileOutputStream(propFilePath)) {
@@ -83,18 +86,19 @@ public enum PropertyManager {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+*/
     }
 
 
     // ******************** Properties ****************************************
-    private void createProperties(Properties properties) {
-        final String propFilePath = new StringBuilder(Constants.HOME_FOLDER).append(Constants.PROPERTIES_FILE_NAME).toString();
-        try (OutputStream output = new FileOutputStream(propFilePath)) {
+    private void createProperties(Map<String, String> properties) {
+        //final String propFilePath = new StringBuilder(Constants.HOME_FOLDER).append(Constants.PROPERTIES_FILE_NAME).toString();
+        //try (OutputStream output = new FileOutputStream(propFilePath)) {
             properties.put(Constants.HIGHSCORE_KEY, Integer.toString(0));
-            properties.store(output, null);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        //    properties.store(output, null);
+        //} catch (IOException ex) {
+        //    ex.printStackTrace();
+        //}
     }
 }
 
