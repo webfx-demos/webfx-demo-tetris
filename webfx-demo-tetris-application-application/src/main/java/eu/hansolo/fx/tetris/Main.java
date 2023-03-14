@@ -1,5 +1,8 @@
 package eu.hansolo.fx.tetris;
 
+import dev.webfx.platform.audio.Audio;
+import dev.webfx.platform.audio.AudioService;
+import dev.webfx.platform.resource.Resource;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -198,16 +201,16 @@ public class Main extends Application {
     private              Image                 githubGreenBlockImg;
     private              Image                 githubLightGreenBlockImg;
     private              Image                 githubVeryLightGreenBlockImg;
-    private              MediaPlayer           mediaPlayer;
-    private              Media                 soundTrack;
-    private              AudioClip             moveBlockSnd;
-    private              AudioClip             rotateBlockSnd;
-    private              AudioClip             levelUpSnd;
-    private              AudioClip             clearLineSnd;
-    private              AudioClip             clear4LinesSnd;
-    private              AudioClip             blockFallingSnd;
-    private              AudioClip             blockLandedSnd;
-    private              AudioClip             gameOverSnd;
+    //private              MediaPlayer           mediaPlayer;
+    private              Audio                 soundTrack;
+    private              Audio                 moveBlockSnd;
+    private              Audio                 rotateBlockSnd;
+    private              Audio                 levelUpSnd;
+    private              Audio                 clearLineSnd;
+    private              Audio                 clear4LinesSnd;
+    private              Audio                 blockFallingSnd;
+    private              Audio                 blockLandedSnd;
+    private              Audio                 gameOverSnd;
     private              GameMode              gameMode;
     private              int                   level;
     private              Block                 activeBlock;
@@ -316,9 +319,9 @@ public class Main extends Application {
     }
 
     @Override public void start(final Stage stage) {
-        mediaPlayer = new MediaPlayer(soundTrack);
-        mediaPlayer.setCycleCount(-1);
-        mediaPlayer.setVolume(0.5);
+        //mediaPlayer = new MediaPlayer(soundTrack);
+        soundTrack.setLooping(true); // mediaPlayer.setCycleCount(-1);
+        soundTrack.setVolume(0.5); // mediaPlayer.setVolume(0.5);
 
         final StackPane gamePane = new StackPane(bkgCanvas, canvas);
 
@@ -394,7 +397,7 @@ public class Main extends Application {
         startScreen(true);
 
         //timer.start();
-        mediaPlayer.play();
+        soundTrack.play(); //mediaPlayer.play();
     }
 
     @Override public void stop() {
@@ -405,42 +408,49 @@ public class Main extends Application {
 
     // Helper methods
     private void loadImages() {
-        startScreenImg = new Image(getClass().getResourceAsStream("startScreen.png"), 500, 530, true, false);
+        startScreenImg = new Image(Resource.toUrl("startScreen.png", getClass()), 500, 530, true, false);
 
-        cyanBlockImg   = new Image(getClass().getResourceAsStream("cyanBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        blueBlockImg   = new Image(getClass().getResourceAsStream("blueBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        orangeBlockImg = new Image(getClass().getResourceAsStream("orangeBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        yellowBlockImg = new Image(getClass().getResourceAsStream("yellowBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        greenBlockImg  = new Image(getClass().getResourceAsStream("greenBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        purpleBlockImg = new Image(getClass().getResourceAsStream("purpleBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        redBlockImg    = new Image(getClass().getResourceAsStream("redBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
+        cyanBlockImg   = new Image(Resource.toUrl("cyanBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        blueBlockImg   = new Image(Resource.toUrl("blueBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        orangeBlockImg = new Image(Resource.toUrl("orangeBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        yellowBlockImg = new Image(Resource.toUrl("yellowBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        greenBlockImg  = new Image(Resource.toUrl("greenBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        purpleBlockImg = new Image(Resource.toUrl("purpleBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        redBlockImg    = new Image(Resource.toUrl("redBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
 
-        cyanGlossyBlockImg   = new Image(getClass().getResourceAsStream("cyanGlossyBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        blueGlossyBlockImg   = new Image(getClass().getResourceAsStream("blueGlossyBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        orangeGlossyBlockImg = new Image(getClass().getResourceAsStream("orangeGlossyBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        yellowGlossyBlockImg = new Image(getClass().getResourceAsStream("yellowGlossyBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        greenGlossyBlockImg  = new Image(getClass().getResourceAsStream("greenGlossyBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        purpleGlossyBlockImg = new Image(getClass().getResourceAsStream("purpleGlossyBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        redGlossyBlockImg    = new Image(getClass().getResourceAsStream("redGlossyBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
+        cyanGlossyBlockImg   = new Image(Resource.toUrl("cyanGlossyBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        blueGlossyBlockImg   = new Image(Resource.toUrl("blueGlossyBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        orangeGlossyBlockImg = new Image(Resource.toUrl("orangeGlossyBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        yellowGlossyBlockImg = new Image(Resource.toUrl("yellowGlossyBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        greenGlossyBlockImg  = new Image(Resource.toUrl("greenGlossyBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        purpleGlossyBlockImg = new Image(Resource.toUrl("purpleGlossyBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        redGlossyBlockImg    = new Image(Resource.toUrl("redGlossyBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
 
-        githubDarkGreenBlockImg      = new Image(getClass().getResourceAsStream("githubDarkGreenBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        githubGreenBlockImg          = new Image(getClass().getResourceAsStream("githubGreenBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        githubLightGreenBlockImg     = new Image(getClass().getResourceAsStream("githubLightGreenBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
-        githubVeryLightGreenBlockImg = new Image(getClass().getResourceAsStream("githubVeryLightGreenBlock.png"), CELL_WIDTH, CELL_HEIGHT, true, false);
+        githubDarkGreenBlockImg      = new Image(Resource.toUrl("githubDarkGreenBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        githubGreenBlockImg          = new Image(Resource.toUrl("githubGreenBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        githubLightGreenBlockImg     = new Image(Resource.toUrl("githubLightGreenBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
+        githubVeryLightGreenBlockImg = new Image(Resource.toUrl("githubVeryLightGreenBlock.png", getClass()), CELL_WIDTH, CELL_HEIGHT, true, false);
     }
 
     private void loadSounds() {
-        soundTrack      = new Media(getClass().getResource("soundtrack.mp3").toExternalForm());
-        moveBlockSnd    = new AudioClip(getClass().getResource("tetris-move-block.mp3").toExternalForm());
-        rotateBlockSnd  = new AudioClip(getClass().getResource("tetris-rotate-block.mp3").toExternalForm());
-        levelUpSnd      = new AudioClip(getClass().getResource("tetris-level-up-jingle.mp3").toExternalForm());
-        clearLineSnd    = new AudioClip(getClass().getResource("tetris-line-clear.mp3").toExternalForm());
-        clear4LinesSnd  = new AudioClip(getClass().getResource("tetris-4-lines.mp3").toExternalForm());
-        blockFallingSnd = new AudioClip(getClass().getResource("tetris-block-falling.mp3").toExternalForm());
-        blockLandedSnd  = new AudioClip(getClass().getResource("tetris-block-landed.mp3").toExternalForm());
-        gameOverSnd     = new AudioClip(getClass().getResource("tetris-game-over.mp3").toExternalForm());
+        soundTrack      = loadMusic(Resource.toUrl("soundtrack.mp3", getClass()));
+        moveBlockSnd    = loadSound(Resource.toUrl("tetris-move-block.mp3", getClass()));
+        rotateBlockSnd  = loadSound(Resource.toUrl("tetris-rotate-block.mp3", getClass()));
+        levelUpSnd      = loadSound(Resource.toUrl("tetris-level-up-jingle.mp3", getClass()));
+        clearLineSnd    = loadSound(Resource.toUrl("tetris-line-clear.mp3", getClass()));
+        clear4LinesSnd  = loadSound(Resource.toUrl("tetris-4-lines.mp3", getClass()));
+        blockFallingSnd = loadSound(Resource.toUrl("tetris-block-falling.mp3", getClass()));
+        blockLandedSnd  = loadSound(Resource.toUrl("tetris-block-landed.mp3", getClass()));
+        gameOverSnd     = loadSound(Resource.toUrl("tetris-game-over.mp3", getClass()));
     }
 
+    private Audio loadMusic(String url) {
+        return AudioService.loadMusic(url);
+    }
+
+    private Audio loadSound(String url) {
+        return AudioService.loadSound(url);
+    }
     private Label createLabel(final String text) {
         Label label = new Label(text);
         label.setFont(Fonts.silkworm(17));
@@ -499,7 +509,7 @@ public class Main extends Application {
 
 
     // Play audio clips
-    private void playSound(final AudioClip audioClip) { audioClip.play(); }
+    private void playSound(final Audio audioClip) { audioClip.play(); }
 
 
     // Spawn block
@@ -527,7 +537,7 @@ public class Main extends Application {
 
     // Start Level
     private void startLevel() {
-        mediaPlayer.play();
+        soundTrack.play(); //mediaPlayer.play();
         running   = true;
         level     = 1;
         noOfLifes = 3;
@@ -547,7 +557,7 @@ public class Main extends Application {
     // Game Over
     private void gameOver() {
         //TODO: Show game over
-        mediaPlayer.stop();
+        soundTrack.stop(); //mediaPlayer.stop();
         playSound(gameOverSnd);
         PropertyManager.INSTANCE.set(Constants.HIGHSCORE_KEY, Long.toString(highscore));
         PropertyManager.INSTANCE.storeProperties();

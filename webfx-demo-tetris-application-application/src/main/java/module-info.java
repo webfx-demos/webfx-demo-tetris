@@ -7,6 +7,8 @@ module webfx.demo.tetris.application.application {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
+    requires webfx.platform.audio;
+    requires webfx.platform.resource;
 
     // Exported packages
     exports eu.hansolo.fx.tetris;
