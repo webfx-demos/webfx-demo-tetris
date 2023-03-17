@@ -8,6 +8,7 @@ import dev.webfx.platform.resource.Resource;
 import dev.webfx.platform.useragent.UserAgent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -682,18 +683,23 @@ public class Main extends Application {
         }
     }
 
-    private long lastClearLineSndPlayed;
+    private Runnable playClearLineSoundRunnable;
+    private int clearLineCount;
 
     private void clearLine(final int line) {
         for (int x = 0 ; x < MATRIX_WIDTH ; x++) { MATRIX[line][x] = 0; }
-        long now = System.currentTimeMillis();
-        if (now > lastClearLineSndPlayed + 500) { // To play the sound only once when clearing several lines (no cacophony)
-            playSound(clearLineSnd);
-            lastClearLineSndPlayed = now;
+        if (line != 0) // Ignoring line 0 which is called in addition
+            clearLineCount++;
+        if (playClearLineSoundRunnable == null) {
+            Platform.runLater(playClearLineSoundRunnable = () -> {
+                playSound(clearLineCount>= 4 ? clear4LinesSnd : clearLineSnd);
+                playClearLineSoundRunnable = null;
+                clearLineCount = 0;
+            });
         }
     }
 
-    private long lastBlockFallingSndPlayed;
+    private Runnable playBlockFallingSndRunnable;
 
     private void shiftDown(final int line) {
         for (int y = line ; y > 0 ; y--) {
@@ -701,10 +707,11 @@ public class Main extends Application {
                 MATRIX[y][x] = MATRIX[y - 1][x];
             }
         }
-        long now = System.currentTimeMillis();
-        if (now > lastBlockFallingSndPlayed + 500) { // To play the sound only once when shifting down several lines (no cacophony)
-            playSound(blockFallingSnd);
-            lastBlockFallingSndPlayed = now;
+        if (playBlockFallingSndRunnable == null) {
+            Platform.runLater(playBlockFallingSndRunnable = () -> {
+                playSound(blockFallingSnd);
+                playBlockFallingSndRunnable = null;
+            });
         }
     }
 
