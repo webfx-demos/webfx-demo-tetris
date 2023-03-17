@@ -289,7 +289,7 @@ public class Main extends Application {
         loadImages();
 
         // Load all sounds
-        loadSounds();
+        //loadSounds(); // Moved to start(), otherwise fails with Gluon (AudioService must be called from the UI thread)
 
         // Initialize block
         activeBlock = null;
@@ -315,6 +315,7 @@ public class Main extends Application {
     }
 
     @Override public void start(final Stage stage) {
+        loadSounds(); // Better place (called by UI thread) to load sounds with Gluon AudioService
         //mediaPlayer = new MediaPlayer(soundTrack);
         soundTrack.setLooping(true); // mediaPlayer.setCycleCount(-1);
         soundTrack.setVolume(0.5); // mediaPlayer.setVolume(0.5);
@@ -357,7 +358,9 @@ public class Main extends Application {
         final Scene scene = DeviceSceneUtil.newScene(new Pane(), 500, 530, Color.BLACK);
         pane.setMaxSize(500, 530); // Necessary to scale up with ScalePane
 
-        DeviceSceneUtil.onFontsAndImagesLoaded(() -> scene.setRoot(new ScalePane(pane)), startScreenImg);
+        ScalePane scalePane = new ScalePane(pane);
+        scalePane.setBackground(gameBox.getBackground());
+        DeviceSceneUtil.onFontsAndImagesLoaded(() -> scene.setRoot(scalePane), startScreenImg);
 
         stage.setTitle("Tetris");
         stage.setScene(scene);

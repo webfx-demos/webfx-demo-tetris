@@ -120,6 +120,13 @@
                         <list>eu/hansolo/fx/tetris/[^/]+$</list>
                         <list>images/checkbox/[^/]+$</list>
                     </resourcesList>
+                    <appIdentifier>dev.webfx.demo.tetris</appIdentifier>
+                    <releaseConfiguration>
+                        <!-- macOS/iOS -->
+                        <bundleName>Tetris</bundleName>
+                        <!-- Android -->
+                        <appLabel>Tetris</appLabel>
+                    </releaseConfiguration>
 
                 </configuration>
             </plugin>
