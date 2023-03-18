@@ -225,6 +225,10 @@ public class Main extends Application {
     private              Canvas                previewCanvas;
     private              GraphicsContext       previewCtx;
     private              ImageView             startScreenView;
+    // Fields used for the mouse/touch support:
+    private              long                  mousePressedTime;
+    private              Block                 draggedBlock;
+    private              long                  lastDraggedDownTime;
 
 
     // ******************** Methods *******************************************
@@ -313,11 +317,6 @@ public class Main extends Application {
         score        = 0;
         linesCleared = 0;
     }
-
-    private long lastMousePressedTime;
-    private long lastBlockDropTime;
-    private long lastBlockMovedDownTime;
-    private Block movedBlock;
 
     @Override public void start(final Stage stage) {
         loadSounds(); // Better place (called by UI thread) to load sounds with Gluon AudioService
@@ -412,49 +411,50 @@ public class Main extends Application {
                 startLevel();
             }
         });
-        canvas.setOnSwipeDown(e -> {
-            if (!running || activeBlock == null)
-                return;
-            long now = System.currentTimeMillis();
-            if (movedBlock != null || now <= lastBlockDropTime + 1000) {
-                return;
-            }
-            activeBlock.drop();
-            movedBlock = activeBlock; // to prevent rotate on mouse released
-            lastBlockDropTime = now;
-        });
-        canvas.setOnMousePressed(e -> {
-            lastMousePressedTime = System.currentTimeMillis();
-            movedBlock = null;
-        });
+        // Memorising the mouse/touch pressed time for further use in other mouse handlers
+        canvas.setOnMousePressed(e -> mousePressedTime = System.currentTimeMillis());
+        // Allowing the block to be dragged through mouse/touch
         canvas.setOnMouseDragged(e -> {
-            if (!running || activeBlock == null || movedBlock != null && movedBlock != activeBlock)
+            // If the player dragged a previous block that reached the bottom, he must release the mouse/touch in order
+            // to drag the new active block.
+            if (!running || activeBlock == null || draggedBlock != null && draggedBlock != activeBlock)
                 return;
+            // Horizontal block drag management (both directions)
             double deltaX = e.getX() - (activeBlock.x * CELL_WIDTH + getBlockWidth(activeBlock) * CELL_WIDTH / 2);
             if (deltaX < -CELL_WIDTH) {
                 activeBlock.moveLeft();
-                movedBlock = activeBlock;
+                draggedBlock = activeBlock;
             } else if (deltaX > CELL_WIDTH) {
                 activeBlock.moveRight();
-                movedBlock = activeBlock;
-            } else {
-                double deltaY = e.getY() - (activeBlock.y + getBlockHeight(activeBlock) * CELL_HEIGHT);
-                long now = System.currentTimeMillis();
-                if (deltaY > CELL_HEIGHT && now > lastBlockMovedDownTime + 100 && now > lastMousePressedTime + 100) {
-                    redraw(true);
-                    playSound(moveBlockSnd);
-                    movedBlock = activeBlock;
-                    lastBlockMovedDownTime = now;
-                }
+                draggedBlock = activeBlock;
+            }
+            // Vertical block drag management (down direction only) to eventually speed up the block to bottom
+            double deltaY = e.getY() - (activeBlock.y + getBlockHeight(activeBlock) * CELL_HEIGHT);
+            // We wait 100ms between 2 moves, and also initially because the player may just want to swipe down
+            long now = System.currentTimeMillis();
+            if (deltaY > CELL_HEIGHT && now > lastDraggedDownTime + 100 && now > mousePressedTime + 100) {
+                activeBlock.moveDown();
+                draggedBlock = activeBlock;
+                lastDraggedDownTime = now;
             }
         });
+        // Dropping the active block on swipe down (touch devices only)
+        canvas.setOnSwipeDown(e -> {
+            // We don't mix gestures, so we don't drop the block if the player dragged it before (he must release the
+            // mouse/touch in order to swipe down again)
+            if (!running || activeBlock == null || draggedBlock != null) { return; }
+            activeBlock.drop();
+            draggedBlock = activeBlock; // this is to prevent the rotation on mouse released
+
+        });
+        // Rotating the block on mouse/touch released
         canvas.setOnMouseReleased(e -> {
-            if (!running || activeBlock == null || movedBlock != null)
-                return;
-            long now = System.currentTimeMillis();
-            if (now >= lastMousePressedTime + 200)
-                return;
-             activeBlock.rotate();
+            // We don't rotate the block if the player dragged it before - or swiped it down (he must release the
+            // mouse/touch in order to rotate it again)
+            if (running && activeBlock != null && draggedBlock == null) {
+                activeBlock.rotate();
+            }
+            draggedBlock = null; // To allow a new gesture (either on the same or on a new block)
         });
 
         startScreen(true);
@@ -1001,6 +1001,12 @@ public class Main extends Application {
             this.x++;
             playSound(moveBlockSnd);
             redraw(false);
+        }
+
+        public void moveDown() {
+            // Always allowed
+            playSound(moveBlockSnd);
+            redraw(true); // moves the block down, and eventually spawn a new block
         }
 
         public void rotate() {
