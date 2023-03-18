@@ -422,19 +422,19 @@ public class Main extends Application {
             // Horizontal block drag management (both directions)
             double deltaX = e.getX() - (activeBlock.x * CELL_WIDTH + getBlockWidth(activeBlock) * CELL_WIDTH / 2);
             if (deltaX < -CELL_WIDTH) {
+                draggedBlock = activeBlock;
                 activeBlock.moveLeft();
-                draggedBlock = activeBlock;
             } else if (deltaX > CELL_WIDTH) {
-                activeBlock.moveRight();
                 draggedBlock = activeBlock;
+                activeBlock.moveRight();
             }
             // Vertical block drag management (down direction only) to eventually speed up the block to bottom
             double deltaY = e.getY() - (activeBlock.y + getBlockHeight(activeBlock) * CELL_HEIGHT);
             // We wait 100ms between 2 moves, and also initially because the player may just want to swipe down
             long now = System.currentTimeMillis();
             if (deltaY > CELL_HEIGHT && now > lastDraggedDownTime + 100 && now > mousePressedTime + 100) {
-                activeBlock.moveDown();
                 draggedBlock = activeBlock;
+                activeBlock.moveDown();
                 lastDraggedDownTime = now;
             }
         });
@@ -443,8 +443,8 @@ public class Main extends Application {
             // We don't mix gestures, so we don't drop the block if the player dragged it before (he must release the
             // mouse/touch in order to swipe down again)
             if (!running || activeBlock == null || draggedBlock != null) { return; }
-            activeBlock.drop();
             draggedBlock = activeBlock; // this is to prevent the rotation on mouse released
+            activeBlock.drop();
 
         });
         // Rotating the block on mouse/touch released
@@ -660,7 +660,8 @@ public class Main extends Application {
     }
 
     private int getBlockWidth(Block block) {
-        return getBlockMatrix(block)[0].length;
+        Integer[] blockMatrix = getBlockMatrix(block)[0];
+        return blockMatrix == null ? 0 : blockMatrix.length;
     }
 
     private int getBlockHeight(Block block) {
@@ -679,31 +680,30 @@ public class Main extends Application {
 
     private boolean moveLeftAllowed(final Block block) {
         if (!block.active) { return false; }
-        if (block.x < 1) { return false; }
-        block.x -= 1;
+        block.x--;
         boolean allowed = checkBlockAllowed(block);
-        block.x += 1;
+        block.x++;
         return allowed;
     }
 
     private boolean moveRightAllowed(final Block block) {
         if (!block.active) { return false; }
-        if (block.x + getBlockWidth(block) > MATRIX_WIDTH - 1) { return false; }
-        block.x += 1;
+        block.x++;
         boolean allowed = checkBlockAllowed(block);
-        block.x -= 1;
+        block.x--;
         return allowed;
     }
 
     private boolean rotateAllowed(final Block block) {
         block.angle = (block.angle + 90) % 360;
-        boolean outsideMatrix = block.x + getBlockWidth(block) > MATRIX_WIDTH || block.y / CELL_HEIGHT + getBlockHeight(block) > MATRIX_HEIGHT;
-        boolean allowed = !outsideMatrix && checkBlockAllowed(block);
+        boolean allowed = checkBlockAllowed(block);
         block.angle = (block.angle - 90) % 360;
         return allowed;
     }
 
     private boolean checkBlockAllowed(final Block block) {
+        if (block.x < 0 || block.x + getBlockWidth(block) > MATRIX_WIDTH) { return false; }
+        if (block.y / CELL_HEIGHT + getBlockHeight(block) > MATRIX_HEIGHT) { return false; }
         final Integer[][] blockMatrix = getBlockMatrix(block);
         for (int y = 0 ; y < blockMatrix.length ; y++) {
             for (int x = 0; x < blockMatrix[y].length; x++) {
@@ -969,12 +969,11 @@ public class Main extends Application {
 
         @Override public void update() {
             if (active) {
-                final Integer[][] blockMatrix = getBlockMatrix(Block.this);
-                double offsetY = blockMatrix.length * CELL_HEIGHT;
-                if (this.y < GAME_HEIGHT - offsetY && moveDownAllowed(Block.this)) {
+                if (moveDownAllowed(Block.this)) {
                     this.y += CELL_HEIGHT;
                 } else {
                     // Store block in MATRIX
+                    final Integer[][] blockMatrix = getBlockMatrix(Block.this);
                     for (int y = 0 ; y < blockMatrix.length ; y++) {
                         for (int x = 0 ; x < blockMatrix[y].length ; x++) {
                             int my = (int) (this.y / CELL_HEIGHT + y);
