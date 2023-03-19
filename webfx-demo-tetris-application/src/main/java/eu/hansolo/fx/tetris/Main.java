@@ -376,21 +376,24 @@ public class Main extends Application {
         stage.setResizable(false);
 
         scene.setOnKeyPressed(e -> {
-            if (running && null != activeBlock) {
-                switch (e.getCode()) {
-                    case LEFT  : activeBlock.moveLeft(); break;
-                    case RIGHT : activeBlock.moveRight(); break;
-                    case SPACE : activeBlock.rotate(); break;
-                    case DOWN  : activeBlock.drop(); break;
-                    default    : if ("M".equalsIgnoreCase(e.getText())) {
-                        if (GameMode.STANDARD == gameMode) {
-                            setGameMode(GameMode.GITHUB);
-                        } else if (GameMode.GITHUB == gameMode) {
-                            setGameMode(GameMode.GLOSSY);
-                        } else {
-                            setGameMode(GameMode.STANDARD);
-                        }
-                        break;
+            if (running) {
+                if (activeBlock != null) {
+                    switch (e.getCode()) {
+                        case LEFT: activeBlock.moveLeft(); break;
+                        case RIGHT: activeBlock.moveRight(); break;
+                        case SPACE: activeBlock.rotate(); break;
+                        case DOWN: activeBlock.drop(); break;
+                        default:
+                            if ("M".equalsIgnoreCase(e.getText())) {
+                                if (GameMode.STANDARD == gameMode) {
+                                    setGameMode(GameMode.GITHUB);
+                                } else if (GameMode.GITHUB == gameMode) {
+                                    setGameMode(GameMode.GLOSSY);
+                                } else {
+                                    setGameMode(GameMode.STANDARD);
+                                }
+                                break;
+                            }
                     }
                 }
             } else {
