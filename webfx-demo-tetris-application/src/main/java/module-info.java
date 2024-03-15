@@ -6,7 +6,7 @@ module webfx.demo.tetris.application {
     requires java.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires webfx.extras.scalepane;
+    requires webfx.extras.panes;
     requires webfx.kit.util.scene;
     requires webfx.platform.audio;
     requires webfx.platform.resource;

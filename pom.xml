@@ -36,6 +36,7 @@
         <module>webfx-demo-tetris-application</module>
         <module>webfx-demo-tetris-application-gluon</module>
         <module>webfx-demo-tetris-application-gwt</module>
+        <module>webfx-demo-tetris-application-j2cl</module>
         <module>webfx-demo-tetris-application-openjfx</module>
     </modules>
 

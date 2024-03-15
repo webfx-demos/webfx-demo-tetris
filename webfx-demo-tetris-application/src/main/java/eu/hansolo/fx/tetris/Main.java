@@ -1,6 +1,6 @@
 package eu.hansolo.fx.tetris;
 
-import dev.webfx.extras.scalepane.ScalePane;
+import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import dev.webfx.platform.audio.Audio;
 import dev.webfx.platform.audio.AudioService;
