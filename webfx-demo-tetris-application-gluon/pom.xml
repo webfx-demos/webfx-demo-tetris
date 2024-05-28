@@ -133,7 +133,6 @@
                         <!-- Android -->
                         <appLabel>Tetris</appLabel>
                     </releaseConfiguration>
-
                 </configuration>
             </plugin>
         </plugins>
