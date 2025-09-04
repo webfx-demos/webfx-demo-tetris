@@ -5,6 +5,7 @@ import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import dev.webfx.platform.audio.Audio;
 import dev.webfx.platform.audio.AudioService;
 import dev.webfx.platform.resource.Resource;
+import dev.webfx.platform.shutdown.Shutdown;
 import dev.webfx.platform.useragent.UserAgent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -25,8 +26,6 @@ import javafx.stage.Stage;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static dev.webfx.platform.shutdown.Shutdown.softwareShutdown;
 
 
 public class Main extends Application {
@@ -472,7 +471,7 @@ public class Main extends Application {
     }
 
     @Override public void stop() {
-        softwareShutdown(true, 0);
+        Shutdown.exit(0);
         //Platform.exit();
         //System.exit(0);
     }
