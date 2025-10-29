@@ -182,6 +182,13 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
+            <artifactId>webfx-kit-perfectscrollbar-elemental2-gwt-j2cl</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
             <artifactId>webfx-kit-platform-audio-openjfx-web</artifactId>
             <version>0.1.0-SNAPSHOT</version>
             <classifier>sources</classifier>

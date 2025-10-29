@@ -11,21 +11,15 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>webfx-demo-tetris-application-j2cl</artifactId>
+    <artifactId>webfx-demo-tetris-application-teavm-wasm</artifactId>
+
+    <packaging>war</packaging>
 
     <dependencies>
 
         <dependency>
-            <groupId>org.treblereel.j2cl.processors</groupId>
-            <artifactId>annotations</artifactId>
-            <version>0.6.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.treblereel.j2cl.processors</groupId>
-            <artifactId>processors</artifactId>
-            <version>0.6.4</version>
-            <scope>provided</scope>
+            <groupId>org.teavm</groupId>
+            <artifactId>teavm-core</artifactId>
         </dependency>
 
         <dependency>
@@ -36,7 +30,7 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-kit-javafxcontrols-registry-elemental2</artifactId>
+            <artifactId>webfx-kit-javafxgraphics-elemental2</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
@@ -48,31 +42,13 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-kit-javafxmedia-registry-elemental2</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-kit-perfectscrollbar-elemental2-gwt-j2cl</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
             <artifactId>webfx-kit-platform-audio-openjfx-web</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-kit-javafxgraphics-fat-j2cl</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-platform-boot</artifactId>
+            <artifactId>webfx-platform-boot-java</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
@@ -84,25 +60,13 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-platform-javabase-emul-j2cl</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-platform-javatime-emul-j2cl</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
             <artifactId>webfx-platform-os-elemental2</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-platform-resource-elemental2</artifactId>
+            <artifactId>webfx-platform-resource-teavm</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
@@ -140,21 +104,16 @@
 
     <profiles>
         <profile>
-            <id>j2cl</id>
+            <id>teavm</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>dev.webfx</groupId>
-                        <artifactId>j2cl-maven-plugin-webfx</artifactId>
-                    </plugin>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>unpack-resources-to-web</id>
-                                <phase>package</phase>
+                                <phase>${plugin.teavm.param.execution.compile.phase}</phase>
                                 <goals>
                                     <goal>unpack</goal>
                                 </goals>
@@ -166,20 +125,13 @@
                                             <version>0.1.0-SNAPSHOT</version>
                                             <includes>eu/hansolo/fx/tetris/</includes>
                                         </artifactItem>
-                                        <artifactItem>
-                                            <groupId>dev.webfx</groupId>
-                                            <artifactId>webfx-kit-perfectscrollbar-elemental2-gwt-j2cl</artifactId>
-                                            <version>0.1.0-SNAPSHOT</version>
-                                            <includes>dev/webfx/kit/perfectscrollbar/</includes>
-                                        </artifactItem>
                                     </artifactItems>
                                     <excludes>**/*.java,**/*.class</excludes>
-                                    <outputDirectory>${project.build.directory}/${project.build.finalName}/${project.artifactId}</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/teavm</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>
